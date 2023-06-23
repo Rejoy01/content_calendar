@@ -1,0 +1,160 @@
+main feature of spring boot is auto configuration
+
+application context is the container of the application
+
+container is a bean that holds all of the classes in our application and any time 
+we can ask that bean for a particular class
+
+a spring bean is nothing more than an instance of ur class with some configuration metadata aroud it
+
+we create a class it won't be added to the container
+spring need to be told about classes that u want to manage it for you
+
+@component
+
+instaed of @component in method level annotation we use @Bean
+Bean must be used inside a @configuration class At top of the class provide @Configuration
+
+app Bean Annotation is used when You need to define a bean on a method that returns some class
+
+53 Springmvc
+
+@Repository
+is used if don't have databse access we can use in memory storage as a repository
+
+left side ... click - spring - beans - we can see how those beans connected
+
+RestTemplate we can use to call out a public API
+
+@Restcontrollers path to the controller
+@Restcontrollers("/api/content")
+
+(\) green color icon in line number indicates that we have a auto wired Bean being injected
+
+@PostConstruct annotation is used on a method that needs to be executed after dependency injection is done to perform any intialization
+
+// adding validation
+<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+	based on validation
+
+import jakarta.validation.constraints.NotBlank;
+=====================================
+ctrl + click - to see different constraints - email,notNull,NotBlank
+
+@NotEmpty - we can use this for string ,collection,map , array
+@NotBlank - notempty or it must have atleast one non-white space character
+
+after setting validation constraints in record
+
+we need to update controllers
+public void create(@Valid @RequestBody Content content){
+            repository.save(content);
+    }
+
+  put @Valid to validate the data
+      ======
+
+     ============
+     JDBC - database
+     ============
+      <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-starter-jdbc</artifactId>
+         </dependency>
+
+         <dependency>
+           <groupId>com.h2database</groupId>
+           <artifactId>h2</artifactId>
+           <scope>runtime</scope>
+         </dependency>
+
+     only have to add
+     at application properties
+     spring.h2.console.enabled=true
+
+DTo - class whose purpose is to transfer data usually from
+        client to server and viceversa
+
+Entity - class store and retrieve data from a data store
+
+pojo - is a class that doesn't extend any of the framework code and doesn't have any restriction baked into it
+
+==========
+use of dataloader class which implements commandlinerunner
+we are passing @Controller annotation (but that should have been @Component annoatation but both will work )
+this will run after dependency injection happens as the application started up
+this is really good spot to do some type of bootstrapping or data loading
+===========
+another way to do this
+a functional interface - so it is target for lambda
+we created a instance of CommandLineRunner at Application using @Bean
+=======================
+if you want to create something instead of using  @component on a class
+if you want to create an instance of a class using a method you can mark it with add @Bean
+=======================
+
+
+what if we want to add new specific queries to repository (most of the common queries are available at ListCurdRepository)
+i want to fetch a data using keyword that i pass
+List<Content> find_ after typing find it will suggest you query derviations
+
+ List<Content> findAllByTitleContains(String keyword);
+
+ this not a implementation just a abstarct method here we defining the signature it will get turned into bits that needs to be turned into for us to actally work at runtime
+
+ MANUALLY given query using @Query annotation
+ =====
+  @Query("""
+         SELECT * FROM Content where status = :status
+         """)
+     List<Content> listByStatus(@Param("status") Status status);
+
+  =======================================
+  we can access properties from application.properties(Home Controller)
+    @Value("${cc.welcomeMessage: Default Welcome Message}")
+      private String welcomeMessage;
+
+      //this will convert to json response
+      @GetMapping("/")
+          public Map<String,String> home(){
+              return Map.of("welcomeMessage",welcomeMessage,"about",about) ;
+          }
+
+          ============
+    to use configuration properties
+   @ConfigurationProperties(value = "cc")
+
+   first we need to enable it in application.java
+   And specifies the class name which we need to enable configuration properties
+   @EnableConfigurationProperties(ContentCalenderProps.class)
+
+
+   after this build - build project
+   we get a target folder inside the classes - meta-inf -
+   then we have some metadata for "cc"
+
+   then we just need to pass the string application.properties
+   when we type "cc" it will show suggestions
+
+   =====================
+   @Profile
+
+   / this annotation don't run this method in dev profile
+   @Profile("!dev")
+   @Component
+   public class DataLoader implements CommandLineRunner {
+       @Override
+       public void run(String... args) throws Exception {
+           System.out.println("Hello");
+       }
+   }
+
+
+we can change profiles eaither by changing in application.properties file
+spring.profiles.active=dev
+or by clicking on RUN -> edit Configuration -> active profiles = production
+
+
