@@ -158,3 +158,35 @@ spring.profiles.active=dev
 or by clicking on RUN -> edit Configuration -> active profiles = production
 
 
+============================
+to make our application production ready
+==
+dependency fro actuator
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+</dependencies>
+
+jackson - create objects out of Json and deserialize them
+
+==============
+build command
+ ./mvnw clean package
+
+ java -jar target/content-calendar-0.0.1-SNAPSHOT.jar
+
+ create docker container
+
+ ===Build native image
+ ./mvnw spring-boot:build-image
+ ====
+ docker image ls -a
+===
+ docker run -it -p8080:8080 content-calendar:0.0.1-SNAPSHOT
+
+ benefits of native image is you get smaller memory footprint and faster startup
+
+
+ here we use Railway services for deploy Spring Boot Appplication on :

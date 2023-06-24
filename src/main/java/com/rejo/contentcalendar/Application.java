@@ -25,13 +25,14 @@ public class Application {
 //	ConfigurableApplicationContext context= SpringApplication.run(Application.class, args);
 //	Arrays.stream(context.getBeanDefinitionNames()).forEach(System.out::println);
 	}
-	@Bean
-	CommandLineRunner commandLineRunner(ContentRepository repository){
-//		return args -> System.out.println("hello dan");
-		// insert some data into database
-		return args -> {
-			Content content = new Content(null,"myFirst Blog"," All About Chat GPT", Status.IDEA, Type.VIDEO, LocalDateTime.now(),null,"");
-			repository.save(content);
-		};
-	}
+	// created startup data in resource
+//	@Bean
+//	CommandLineRunner commandLineRunner(ContentRepository repository){
+////		return args -> System.out.println("hello dan");
+//		// insert some data into database
+//		return args -> {
+//			Content content = new Content(null,"myFirst Blog"," All About Chat GPT", Status.IDEA, Type.VIDEO, LocalDateTime.now(),null,"");
+//			repository.save(content);
+//		};
+//	}
 }
